@@ -1,5 +1,5 @@
 //
-//  SettingsViewModel.swift
+//  ProfileViewModel.swift
 //  Elsa
 //
 //  Created by Ildar Shamsullin on 22.12.2024.
@@ -7,14 +7,12 @@
 
 import Foundation
 
-final class SettingsViewModel: ObservableObject {
+final class ProfileViewModel: ObservableObject {
   
   // MARK: - Published Properties
   @Published public var isDisplayingError = false
   @Published public var lastErrorMessage = "" {
-    didSet {
-      isDisplayingError = true
-    }
+    didSet { isDisplayingError = true }
   }
   
   // MARK: - Private Properties

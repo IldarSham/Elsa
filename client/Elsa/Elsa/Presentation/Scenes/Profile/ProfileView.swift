@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  ProfileView.swift
 //  Elsa
 //
 //  Created by Ildar Shamsullin on 22.12.2024.
@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-struct SettingsView: View {
-  @ObservedObject var viewModel: SettingsViewModel
+struct ProfileView: View {
   
+  // MARK: - Properties
+  @ObservedObject var viewModel: ProfileViewModel
+  
+  // MARK: - Body
   var body: some View {
     NavigationView {
       List {
@@ -21,7 +24,7 @@ struct SettingsView: View {
       }
       .listStyle(.grouped)
       .navigationBarTitleDisplayMode(.inline)
-      .navigationTitle("Настройки")
+      .navigationTitle("Профиль")
     }
     .alert("Ошибка", isPresented: $viewModel.isDisplayingError, actions: {
       Button("Закрыть", role: .cancel) { }
@@ -32,6 +35,6 @@ struct SettingsView: View {
 }
 
 @MainActor
-protocol SettingsViewFactory {
-  func makeSettingsView() -> SettingsView
+protocol ProfileViewFactory {
+  func makeProfileView() -> ProfileView
 }

@@ -23,7 +23,9 @@ final class SendMessageUseCase: SendMessageUseCaseProtocol {
   
   @discardableResult
   func send(to conversationId: UUID, text: String) async throws -> Message {
-    try await remoteAPI.sendMessage(to: conversationId,
-                                    text: text)
+    return try await remoteAPI.sendMessage(
+      to: conversationId,
+      text: text
+    )
   }
 }

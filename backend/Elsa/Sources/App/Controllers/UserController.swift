@@ -10,7 +10,6 @@ import Vapor
 struct UserSession: Content {
   let token: String
   let user: UserDTO
-  let initialConversationId: Conversation.IDValue
 }
 
 struct UserController: RouteCollection {
@@ -33,13 +32,9 @@ struct UserController: RouteCollection {
     let token = try Token.generate(for: user)
     try await token.save(on: req.db)
     
-    let conversation = try Conversation(creator: user)
-    try await conversation.save(on: req.db)
-    
     return UserSession(
       token: token.value,
-      user: try user.toDTO(),
-      initialConversationId: try conversation.requireID())
+      user: try user.toDTO())
   }
   
   @Sendable
@@ -49,13 +44,8 @@ struct UserController: RouteCollection {
     let token = try Token.generate(for: user)
     try await token.save(on: req.db)
     
-    guard let conversation = try await user.$conversations.query(on: req.db).first() else {
-      throw Abort(.notFound, reason: "Conversation not found for the user")
-    }
-    
     return UserSession(
       token: token.value,
-      user: try user.toDTO(),
-      initialConversationId: try conversation.requireID())
+      user: try user.toDTO())
   }
 }

@@ -12,10 +12,6 @@ final class SignedInViewModel {
   // MARK: - Properties
   private let userSession: RemoteUserSession
   
-  public var initialConversationId: UUID {
-    userSession.initialConversationId
-  }
-  
   // MARK: - Initialization
   init(userSession: RemoteUserSession) {
     self.userSession = userSession

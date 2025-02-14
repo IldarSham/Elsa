@@ -1,5 +1,5 @@
 //
-//  EventsStreamGroup.swift
+//  EventsStreamGroupManager.swift
 //  Elsa
 //
 //  Created by Ildar Shamsullin on 28.12.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public actor EventsStreamGroup<Event: StreamableEvent> {
+public actor EventsStreamGroupManager<Event: StreamableEvent> {
   
   // MARK: - Properties
   private var streams: [UUID: EventsStreamManager<Event>] = [:]

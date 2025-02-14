@@ -10,5 +10,4 @@ import Foundation
 struct RemoteUserSession: Codable {
   let token: String
   let user: User
-  let initialConversationId: UUID
 }

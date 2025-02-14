@@ -20,6 +20,6 @@ final class LoadUserSessionUseCase: LoadUserSessionUseCaseProtocol {
   }
   
   func load() throws -> RemoteUserSession? {
-    try dataStore.readUserSession()
+    return try dataStore.readUserSession()
   }
 }

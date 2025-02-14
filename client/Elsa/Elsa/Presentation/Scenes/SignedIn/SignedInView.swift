@@ -9,13 +9,12 @@ import SwiftUI
 
 struct SignedInView: View {
   
+  // MARK: - Properties
   let viewModel: SignedInViewModel
-  
-  // Factories
   let chatViewFactory: ChatViewFactory
   
   var body: some View {
-    chatViewFactory.makeChatView(conversationId: viewModel.initialConversationId)
+    chatViewFactory.makeChatView()
   }
 }
 

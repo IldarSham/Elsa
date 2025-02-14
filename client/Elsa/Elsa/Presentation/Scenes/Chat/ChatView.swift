@@ -9,94 +9,121 @@ import SwiftUI
 
 struct ChatView: View {
   
-  @ObservedObject var viewModel: ChatViewModel
-  let settingsViewFactory: SettingsViewFactory
+  // MARK: - Constants
+  private enum Constants {
+    static let sideMenuWidthRatio: CGFloat = 0.75
+  }
   
-  @State private var scrolledID: Message.ID?
+  // MARK: - Properties
+  @ObservedObject private var viewModel: ChatViewModel
+  private let conversationFactory: ConversationViewFactory
+  private let conversationsListView: ConversationsListView
   
+  // MARK: - Initialization
+  public init(
+    viewModel: ChatViewModel,
+    conversationsListViewFactory: ConversationsListViewFactory,
+    conversationViewFactory: ConversationViewFactory
+  ) {
+    self.viewModel = viewModel
+    self.conversationFactory = conversationViewFactory
+    self.conversationsListView = Self.createConversationsListView(
+      from: conversationsListViewFactory,
+      viewModel: viewModel
+    )
+  }
+  
+  // MARK: - Body
   var body: some View {
+    GeometryReader { geometry in
+      ZStack(alignment: .leading) {
+        mainChatNavigationView(in: geometry)
+        
+        if viewModel.isSideMenuVisible {
+          conversationsListView
+            .frame(width: geometry.size.width * Constants.sideMenuWidthRatio)
+            .transition(.move(edge: .leading))
+        }
+      }
+      .gesture(dragGesture)
+    }
+  }
+  
+  // MARK: - Main Chat View
+  private func mainChatNavigationView(in geometry: GeometryProxy) -> some View {
     NavigationView {
-      VStack {
-        if viewModel.hasMessages {
-          messagesListView
-        } else {
-          emptyStateView
-        }
-        messageInputView
+      VStack(spacing: 0) {
+        chatContent
+        messageInputArea
       }
-      .navigationBarTitleDisplayMode(.inline)
+      .disabled(viewModel.isSideMenuVisible)
       .navigationTitle("Elsa")
-      .toolbar { settingsButton }
-      .sheet(isPresented: $viewModel.isSettingsVisible) {
-        settingsViewFactory.makeSettingsView()
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        sideMenuToggleButton
+        newConversationToolbarButton
       }
-      .task {
-        await viewModel.startMessageStreaming()
-      }
-      .task {
-        await viewModel.loadMessages()
+      .overlay(
+        viewModel.isSideMenuVisible ? Color.black.opacity(0.3) : Color.clear
+      )
+    }
+    .offset(x: viewModel.isSideMenuVisible ? geometry.size.width * Constants.sideMenuWidthRatio : 0)
+    .animation(.easeInOut, value: viewModel.isSideMenuVisible)
+  }
+  
+  // MARK: - Gestures
+  private var dragGesture: some Gesture {
+    DragGesture().onEnded { value in
+      if value.location.x < 200,
+         abs(value.translation.height) < 50,
+         abs(value.translation.width) > 50 {
+        withAnimation {
+          viewModel.isSideMenuVisible = value.translation.width > 0
+        }
       }
     }
   }
   
-  private var messagesListView: some View {
-    ScrollView {
-      if viewModel.isLoadingMore {
-        ProgressView()
-          .tint(Color.primaryBlue)
-          .padding()
-      }
-      
-      LazyVStack(spacing: 20) {
-        ForEach(viewModel.messages) { message in
-          MessageView(viewModel: viewModel.getMessageViewModel(for: message))
-        }
-        .onChange(of: viewModel.messages.last) {
-          guard let last = viewModel.messages.last else { return }
-          
-          withAnimation(.easeOut) {
-            scrolledID = last.id
-          }
-        }
-        .onChange(of: scrolledID) {
-          if scrolledID == viewModel.messages.first?.id {
-            viewModel.loadMoreMessages()
-          }
-        }
-      }
-      .scrollTargetLayout()
+  // MARK: - Chat Content
+  @ViewBuilder
+  private var chatContent: some View {
+    if let conversationId = viewModel.activeConversationId {
+      conversationFactory.makeConversationView(conversationId: conversationId)
+        .id(conversationId)
+    } else {
+      emptyChatState
     }
-    .scrollPosition(id: $scrolledID)
-    .defaultScrollAnchor(.bottom)
-    .padding(.vertical, 20)
   }
   
-  private var emptyStateView: some View {
+  private var emptyChatState: some View {
     Text("Задайте мне вопрос")
-      .bold()
       .font(.title)
+      .bold()
       .foregroundStyle(
-        .linearGradient(
-          colors: [
-            Color.primaryBlue,
-            Color.lightBlue
-          ],
+        LinearGradient(
+          colors: [Color.primaryBlue, Color.lightBlue],
           startPoint: .leading,
           endPoint: .trailing
-        ))
+        )
+      )
       .frame(maxHeight: .infinity, alignment: .center)
   }
   
-  private var messageInputView: some View {
+  // MARK: - Message Input Area
+  private var messageInputArea: some View {
     HStack(alignment: .bottom, spacing: 12) {
       MessageTextField(placeholder: "Как вам помочь?", text: $viewModel.messageInput)
       
       Button(action: viewModel.sendMessage) {
         Image(systemName: "arrow.up.circle.fill")
           .resizable()
-          .tint(Color.primaryBlue)
           .frame(width: 35, height: 35)
           .padding(.bottom, 6)
+          .foregroundColor(
+            viewModel.messageInput.isEmpty
+            ? Color.primaryBlue.opacity(0.4)
+            : Color.primaryBlue
+          )
       }
       .disabled(viewModel.messageInput.isEmpty)
     }
@@ -104,19 +131,45 @@ struct ChatView: View {
     .padding(.vertical, 20)
   }
   
-  private var settingsButton: some ToolbarContent {
-    ToolbarItemGroup(placement: .navigationBarTrailing) {
-      Button(action: {
-        viewModel.isSettingsVisible = true
-      }) {
-        Image(systemName: "gearshape.fill")
-          .tint(Color(UIColor.darkGray))
+  // MARK: - Toolbar Items
+  private var sideMenuToggleButton: some ToolbarContent {
+    ToolbarItemGroup(placement: .topBarLeading) {
+      Button {
+        withAnimation { viewModel.isSideMenuVisible.toggle() }
+      } label: {
+        SideMenuIcon()
       }
     }
   }
+  
+  private var newConversationToolbarButton: some ToolbarContent {
+    ToolbarItemGroup(placement: .navigationBarTrailing) {
+      Button(action: viewModel.startNewConversation) {
+        Image(systemName: "square.and.pencil")
+          .tint(.black)
+      }
+    }
+  }
+  
+  // MARK: - Helper Methods
+  private static func createConversationsListView(
+    from factory: ConversationsListViewFactory,
+    viewModel: ChatViewModel
+  ) -> ConversationsListView {
+    factory.makeConversationsListView(
+      didSelectConversation: { conversation in
+        viewModel.selectConversation(conversation)
+        viewModel.isSideMenuVisible = false
+      },
+      didTapNewChat: {
+        viewModel.isSideMenuVisible = false
+      }
+    )
+  }
 }
+
 
 @MainActor
 protocol ChatViewFactory {
-  func makeChatView(conversationId: UUID) -> ChatView
+  func makeChatView() -> ChatView
 }

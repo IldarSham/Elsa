@@ -20,8 +20,10 @@ final class LoadMessagesListUseCase: LoadMessagesListUseCaseProtocol {
   }
   
   func load(for conversationId: UUID, page: Int, per: Int) async throws -> Page<Message> {
-    return try await remoteAPI.getAllMessages(for: conversationId,
-                                              page: page,
-                                              per: per)
+    return try await remoteAPI.getAllMessages(
+      for: conversationId,
+      page: page,
+      per: per
+    )
   }
 }

@@ -14,18 +14,17 @@ final class LoginViewModel: ObservableObject {
   @Published public var email: String = ""
   @Published public var password: String = ""
   
-  @Published public var isLoading: Bool = false
-  @Published public var lastErrorMessage = "" {
-    didSet {
-      isDisplayingError = true
-    }
-  }
-  @Published public var isDisplayingError = false
-  
   @Published public var isEmailInvalid = false
   @Published public var isPasswordInvalid = false
+  
+  @Published public var isLoading: Bool = false
+  
+  @Published public var lastErrorMessage = "" {
+    didSet { isDisplayingError = true }
+  }
+  @Published public var isDisplayingError = false
     
-  // MARK: - Private Properties
+  // MARK: - Dependencies
   private let loginUseCase: LoginUseCaseProtocol
   private let signedInResponder: SignedInResponder
   
@@ -54,6 +53,7 @@ final class LoginViewModel: ObservableObject {
   }
   
   // MARK: - Private Methods
+  
   private func onLoginSuccess(userSession: RemoteUserSession) {
     signedInResponder.signedIn(to: userSession)
   }
@@ -69,8 +69,7 @@ final class LoginViewModel: ObservableObject {
   }
   
   private func validateField(validator: () throws -> Void) -> Bool {
-    return hasValidationError(validator: validator,
-                              onError: handleValidationError)
+    return hasValidationError(validator: validator, onError: handleValidationError)
   }
   
   private func handleValidationError(_ error: Error) {

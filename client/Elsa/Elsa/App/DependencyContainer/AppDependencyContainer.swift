@@ -20,15 +20,12 @@ final class AppDependencyContainer {
       let userSessionCoding: UserSessionCoding = UserSessionPropertyListCoder()
       return UserSessionDataStore(userSessionCoder: userSessionCoding)
     }
-    
     func makeMainViewModel() -> MainViewModel {
       return MainViewModel()
     }
-    
     func makeUrlSessionManager() -> URLSessionManagerProtocol {
       return URLSessionManager()
     }
-    
     func makeRemoteAPIManager() -> RemoteAPIManagerProtocol {
       let urlSessionManager = makeUrlSessionManager()
       return RemoteAPIManager(urlSessionManager: urlSessionManager)
@@ -46,11 +43,11 @@ final class AppDependencyContainer {
                     signedInViewFactory: self)
   }
   
-  func makeLoadUserSessionUseCase() -> LoadUserSessionUseCaseProtocol {
+  public func makeLoadUserSessionUseCase() -> LoadUserSessionUseCaseProtocol {
     return LoadUserSessionUseCase(dataStore: sharedUserSessionDataStore)
   }
   
-  func makeAuthRemoteAPI() -> AuthRemoteAPIProtocol {
+  public func makeAuthRemoteAPI() -> AuthRemoteAPIProtocol {
     return AuthRemoteAPI(apiManager: sharedRemoteAPIManager)
   }
 }
@@ -58,12 +55,12 @@ final class AppDependencyContainer {
 // MARK: - LaunchViewFactory
 extension AppDependencyContainer: LaunchViewFactory {
   
-  func makeLaunchView() -> LaunchView {
+  public func makeLaunchView() -> LaunchView {
     let viewModel = makeLaunchViewModel()
     return LaunchView(viewModel: viewModel)
   }
   
-  func makeLaunchViewModel() -> LaunchViewModel {
+  public func makeLaunchViewModel() -> LaunchViewModel {
     let useCase = makeLoadUserSessionUseCase()
     return LaunchViewModel(loadUserSessionUseCase: useCase,
                            notSignedInResponder: sharedMainViewModel,
@@ -86,7 +83,7 @@ extension AppDependencyContainer: LoginViewFactory {
                           signedInResponder: sharedMainViewModel)
   }
   
-  func makeLoginUseCase() -> LoginUseCaseProtocol {
+  public func makeLoginUseCase() -> LoginUseCaseProtocol {
     let remoteAPI = makeAuthRemoteAPI()
     return LoginUseCase(remoteAPI: remoteAPI,
                         dataStore: sharedUserSessionDataStore)
@@ -107,7 +104,7 @@ extension AppDependencyContainer: RegisterViewFactory {
                              signedInResponder: sharedMainViewModel)
   }
   
-  func makeRegisterUseCase() -> RegisterUseCaseProtocol {
+  public func makeRegisterUseCase() -> RegisterUseCaseProtocol {
     let remoteAPI = makeAuthRemoteAPI()
     return RegisterUseCase(remoteAPI: remoteAPI,
                            dataStore: sharedUserSessionDataStore)
