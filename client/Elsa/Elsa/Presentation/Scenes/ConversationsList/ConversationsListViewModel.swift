@@ -137,7 +137,7 @@ final class ConversationsListViewModel: ObservableObject,
   
   // MARK: - UpdatedConversationTitleResponder
   
-  func updatedConversationTitle(_ updated: UpdatedTitle) {
+  public func updatedConversationTitle(_ updated: UpdatedTitle) {
     for section in conversationsBySection.keys {
       if let index = conversationsBySection[section]?.firstIndex(where: { $0.id == updated.conversation.id }) {
         conversationsBySection[section]?[index].title = updated.updatedTitle

@@ -21,9 +21,6 @@ struct ConversationsListView: View {
   var didSelectConversation: ((Conversation) -> Void)?
   var didTapNewChat: (() -> Void)?
   
-  // MARK: - Computed Properties
-  
-  
   // MARK: - Initialization
   public init(viewModel: ConversationsListViewModel,
               didSelectConversation: ((Conversation) -> Void)? = nil,
@@ -69,7 +66,7 @@ struct ConversationsListView: View {
         ProgressView()
           .id(UUID())
           .listRowSeparator(.hidden)
-          .onAppear { viewModel.loadMoreConversations() }
+          .onAppear(perform: viewModel.loadMoreConversations)
       }
     }
     .listSectionSpacing(3.0)
