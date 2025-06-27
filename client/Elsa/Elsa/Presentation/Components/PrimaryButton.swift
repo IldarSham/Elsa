@@ -33,15 +33,7 @@ public struct PrimaryButton: View {
     }
     .frame(maxWidth: .infinity)
     .padding(.vertical, 15)
-    .background(
-      .linearGradient(
-        colors: [
-          Color(red: 20/255, green: 166/255, blue: 201/255),
-          Color(red: 189/255, green: 230/255, blue: 240/255)
-        ],
-        startPoint: .leading,
-        endPoint: .trailing
-      ))
+    .background(Color.primaryBlue.opacity(0.75))
     .cornerRadius(10)
     .disabled(isLoading)
   }
