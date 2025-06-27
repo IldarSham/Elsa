@@ -36,7 +36,7 @@ struct LoginView: View {
               focusedField = .password
             }
           
-          MaterialDesignTextField(.secure, placeholder: "Пароль*", text: $viewModel.password, isInvalid: $viewModel.isPasswordInvalid)
+          MaterialDesignTextField(.secure, placeholder: "Пароль", text: $viewModel.password, isInvalid: $viewModel.isPasswordInvalid)
             .focused($focusedField, equals: .password)
             .submitLabel(.done)
         }
