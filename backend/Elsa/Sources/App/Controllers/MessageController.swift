@@ -79,28 +79,12 @@ struct MessageController: RouteCollection, Sendable {
   ) async {
     do {
       try await broadcast(.newMessage(message), for: conversation.requireID())
-      try await setTitleIfNeeded(
-        for: conversation, newTitle: message.content, req: req)
+      
       try await generateBotReply(for: message, req: req)
+      try await setTitleIfNeeded(for: conversation, newTitle: message.content, req: req)
     } catch {
       req.logger.report(error: error)
     }
-  }
-  
-  private func setTitleIfNeeded(
-    for conversation: Conversation,
-    newTitle: String,
-    req: Request
-  ) async throws {
-    guard conversation.title == nil else { return }
-    
-    conversation.title = newTitle
-    try await conversation.save(on: req.db)
-    
-    let updatedTitle = UpdatedTitle(
-      conversation: conversation,
-      updatedTitle: newTitle)
-    try await broadcast(.updatedTitle(updatedTitle), for: conversation.requireID())
   }
   
   private func generateBotReply(for message: Message, req: Request) async throws {
@@ -117,6 +101,22 @@ struct MessageController: RouteCollection, Sendable {
     try await replyMessage.$conversation.load(on: req.db)
 
     try await broadcast(.newMessage(replyMessage), for: replyMessage.conversation.requireID())
+  }
+  
+  private func setTitleIfNeeded(
+    for conversation: Conversation,
+    newTitle: String,
+    req: Request
+  ) async throws {
+    guard conversation.title == nil else { return }
+    
+    conversation.title = newTitle
+    try await conversation.save(on: req.db)
+    
+    let updatedTitle = UpdatedTitle(
+      conversation: conversation,
+      updatedTitle: newTitle)
+    try await broadcast(.updatedTitle(updatedTitle), for: conversation.requireID())
   }
   
   private func broadcast(_ event: ConversationEvent, for conversationId: Conversation.IDValue) async throws {
