@@ -16,3 +16,13 @@ struct ConversationEvent {
           updatedTitle: try updatedTitle?.toDTO())
   }
 }
+
+extension ConversationEvent {
+  static func newMessage(_ message: Message) -> ConversationEvent {
+    .init(newMessage: message)
+  }
+  
+  static func updatedTitle(_ updatedTitle: UpdatedTitle) -> ConversationEvent {
+    .init(updatedTitle: updatedTitle)
+  }
+}

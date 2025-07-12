@@ -65,50 +65,64 @@ struct MessageController: RouteCollection, Sendable {
     try await message.save(on: req.db)
     try await message.$conversation.load(on: req.db)
     
-    try await processNewMessage(message, req: req)
-    try await setTitleIfNeeded(for: conversation, newTitle: sendData.content, req: req)
+    await handleNewMessage(message, in: conversation, req: req)
     
     return try message.toDTO()
   }
   
+  // MARK: — Private Helpers
   
-  private func setTitleIfNeeded(for conversation: Conversation,
-                                newTitle: String,
-                                req: Request) async throws {
+  private func handleNewMessage(
+    _ message: Message,
+    in conversation: Conversation,
+    req: Request
+  ) async {
+    do {
+      try await broadcast(.newMessage(message), for: conversation.requireID())
+      try await setTitleIfNeeded(
+        for: conversation, newTitle: message.content, req: req)
+      try await generateBotReply(for: message, req: req)
+    } catch {
+      req.logger.report(error: error)
+    }
+  }
+  
+  private func setTitleIfNeeded(
+    for conversation: Conversation,
+    newTitle: String,
+    req: Request
+  ) async throws {
     guard conversation.title == nil else { return }
     
     conversation.title = newTitle
     try await conversation.save(on: req.db)
     
-    let updatedTitle = UpdatedTitle(conversation: conversation, updatedTitle: newTitle)
-    let event = ConversationEvent(updatedTitle: updatedTitle)
-    try await broadcastEvent(event, for: conversation.requireID())
+    let updatedTitle = UpdatedTitle(
+      conversation: conversation,
+      updatedTitle: newTitle)
+    try await broadcast(.updatedTitle(updatedTitle), for: conversation.requireID())
   }
   
-  private func processNewMessage(_ message: Message, req: Request) async throws {
-    let event = ConversationEvent(newMessage: message)
-    try await broadcastEvent(event, for: message.conversation.requireID())
-    try await generateAssistantResponse(for: message, req: req)
-  }
-  
-  private func generateAssistantResponse(for message: Message, req: Request) async throws {
+  private func generateBotReply(for message: Message, req: Request) async throws {
     try await Task.sleep(for: .seconds(0.5))
     
-    let responseText = await bot.getResponse(to: message.content)
-    let assistantMessage = try Message(
+    let replyText = await bot.getResponse(to: message.content)
+    let replyMessage = try Message(
       sender: .assistant,
-      content: responseText,
+      content: replyText,
       conversation: message.conversation
     )
-    try await assistantMessage.save(on: req.db)
-    try await assistantMessage.$conversation.load(on: req.db)
     
-    let event = ConversationEvent(newMessage: assistantMessage)
-    try await broadcastEvent(event, for: assistantMessage.conversation.requireID())
+    try await replyMessage.save(on: req.db)
+    try await replyMessage.$conversation.load(on: req.db)
+
+    try await broadcast(.newMessage(replyMessage), for: replyMessage.conversation.requireID())
   }
   
-  private func broadcastEvent(_ event: ConversationEvent,
-                              for conversationId: Conversation.IDValue) async throws {
-    try await ConversationController.sseHub.send(event.toDTO(), to: conversationId)
+  private func broadcast(_ event: ConversationEvent, for conversationId: Conversation.IDValue) async throws {
+    try await ConversationController.sseHub.send(
+      event.toDTO(),
+      to: conversationId
+    )
   }
 }
