@@ -109,8 +109,6 @@ struct MessageController: RouteCollection, Sendable {
   
   private func broadcastEvent(_ event: ConversationEvent,
                               for conversationId: Conversation.IDValue) async throws {
-    if let manager = await ConversationController.eventsStreamGroupManager.get(for: conversationId) {
-      try await manager.send(event.toDTO())
-    }
+    try await ConversationController.sseHub.send(event.toDTO(), to: conversationId)
   }
 }

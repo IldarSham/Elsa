@@ -10,7 +10,7 @@ import Fluent
 
 struct ConversationController: RouteCollection {
   
-  static let eventsStreamGroupManager = EventsStreamGroupManager<ConversationEventDTO>()
+  static let sseHub = SSEHub<UUID, ConversationEventDTO>()
   
   func boot(routes: RoutesBuilder) throws {
     let conversationsRoute = routes.grouped("api", "conversations")
@@ -40,7 +40,7 @@ struct ConversationController: RouteCollection {
   }
   
   @Sendable
-  func streamUpdatesHandler(req: Request) async throws -> EventsStream<ConversationEventDTO> {
+  func streamUpdatesHandler(req: Request) async throws -> SSEStream<ConversationEventDTO> {
     let user = try req.auth.require(User.self)
     
     guard let conversationId = req.parameters.get("conversation_id", as: Conversation.IDValue.self) else {
@@ -50,8 +50,8 @@ struct ConversationController: RouteCollection {
     let conversation = try await
       Conversation.fetch(by: conversationId, userId: user.requireID(), db: req.db)
     
-    let manager = await Self.eventsStreamGroupManager.create(for: try conversation.requireID())
-    return await manager.createEventsStream()
+    let stream = await Self.sseHub.subscribe(for: try conversation.requireID())
+    return stream
   }
   
   @Sendable
