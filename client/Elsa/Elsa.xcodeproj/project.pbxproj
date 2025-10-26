@@ -25,7 +25,7 @@
 		7443691D2D23DF4700ADB644 /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443691C2D23DF4700ADB644 /* LogoutUseCase.swift */; };
 		7443691F2D23DFD000ADB644 /* LoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7443691E2D23DFD000ADB644 /* LoginUseCase.swift */; };
 		744369212D23E05F00ADB644 /* RegisterUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744369202D23E05F00ADB644 /* RegisterUseCase.swift */; };
-		744369232D23E24400ADB644 /* LoadMessagesListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744369222D23E24400ADB644 /* LoadMessagesListUseCase.swift */; };
+		744369232D23E24400ADB644 /* LoadMessageHistoryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744369222D23E24400ADB644 /* LoadMessageHistoryUseCase.swift */; };
 		744369252D23E3C500ADB644 /* SendMessageUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744369242D23E3C500ADB644 /* SendMessageUseCase.swift */; };
 		744369272D23E5CB00ADB644 /* LoadUserSessionUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744369262D23E5CB00ADB644 /* LoadUserSessionUseCase.swift */; };
 		744691552D26EA8D0095E624 /* RemoteAPIManagerError+LocalizedDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744691542D26EA8D0095E624 /* RemoteAPIManagerError+LocalizedDescription.swift */; };
@@ -52,6 +52,7 @@
 		7466CB0F2D13709E00EBB441 /* AuthRemoteAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466CB0E2D13709E00EBB441 /* AuthRemoteAPI.swift */; };
 		7466CB112D13717600EBB441 /* NewAccountPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7466CB102D13717600EBB441 /* NewAccountPayload.swift */; };
 		746F2AEE2D27D7FF00AC07F3 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746F2AED2D27D7FF00AC07F3 /* Color+Extension.swift */; };
+		746FD0572EAE7CB100B53B63 /* MessageHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746FD0562EAE7CB100B53B63 /* MessageHistory.swift */; };
 		74733B252D110BBE00725EDF /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74733B242D110BBE00725EDF /* User.swift */; };
 		7495BEB42D47486600516F8C /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7495BEB32D47486600516F8C /* ConversationView.swift */; };
 		7495BEB62D474CE600516F8C /* CreateConversationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7495BEB52D474CE600516F8C /* CreateConversationUseCase.swift */; };
@@ -76,7 +77,7 @@
 		74DA93CF2D0FBB9D00A5F865 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DA93CE2D0FBB9D00A5F865 /* LoginRequest.swift */; };
 		74DA93D12D0FBEC600A5F865 /* RegisterRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DA93D02D0FBEC600A5F865 /* RegisterRequest.swift */; };
 		74E3EF5D2D17BA4800B62117 /* MessagesRemoteAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF5C2D17BA4800B62117 /* MessagesRemoteAPI.swift */; };
-		74E3EF5F2D17BD5800B62117 /* MessagesListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF5E2D17BD5800B62117 /* MessagesListRequest.swift */; };
+		74E3EF5F2D17BD5800B62117 /* MessageHistoryRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF5E2D17BD5800B62117 /* MessageHistoryRequest.swift */; };
 		74E3EF612D17CA3600B62117 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF602D17CA3600B62117 /* Page.swift */; };
 		74E3EF642D17F26200B62117 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF632D17F26200B62117 /* ProfileView.swift */; };
 		74E3EF662D17F2E600B62117 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E3EF652D17F2E600B62117 /* ProfileViewModel.swift */; };
@@ -109,7 +110,7 @@
 		7443691C2D23DF4700ADB644 /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
 		7443691E2D23DFD000ADB644 /* LoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUseCase.swift; sourceTree = "<group>"; };
 		744369202D23E05F00ADB644 /* RegisterUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUseCase.swift; sourceTree = "<group>"; };
-		744369222D23E24400ADB644 /* LoadMessagesListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMessagesListUseCase.swift; sourceTree = "<group>"; };
+		744369222D23E24400ADB644 /* LoadMessageHistoryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMessageHistoryUseCase.swift; sourceTree = "<group>"; };
 		744369242D23E3C500ADB644 /* SendMessageUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageUseCase.swift; sourceTree = "<group>"; };
 		744369262D23E5CB00ADB644 /* LoadUserSessionUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadUserSessionUseCase.swift; sourceTree = "<group>"; };
 		744691542D26EA8D0095E624 /* RemoteAPIManagerError+LocalizedDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemoteAPIManagerError+LocalizedDescription.swift"; sourceTree = "<group>"; };
@@ -137,6 +138,7 @@
 		7466CB0E2D13709E00EBB441 /* AuthRemoteAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRemoteAPI.swift; sourceTree = "<group>"; };
 		7466CB102D13717600EBB441 /* NewAccountPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountPayload.swift; sourceTree = "<group>"; };
 		746F2AED2D27D7FF00AC07F3 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		746FD0562EAE7CB100B53B63 /* MessageHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistory.swift; sourceTree = "<group>"; };
 		74733B242D110BBE00725EDF /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7495BEB32D47486600516F8C /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
 		7495BEB52D474CE600516F8C /* CreateConversationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateConversationUseCase.swift; sourceTree = "<group>"; };
@@ -162,7 +164,7 @@
 		74DA93CE2D0FBB9D00A5F865 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		74DA93D02D0FBEC600A5F865 /* RegisterRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterRequest.swift; sourceTree = "<group>"; };
 		74E3EF5C2D17BA4800B62117 /* MessagesRemoteAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesRemoteAPI.swift; sourceTree = "<group>"; };
-		74E3EF5E2D17BD5800B62117 /* MessagesListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListRequest.swift; sourceTree = "<group>"; };
+		74E3EF5E2D17BD5800B62117 /* MessageHistoryRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHistoryRequest.swift; sourceTree = "<group>"; };
 		74E3EF602D17CA3600B62117 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		74E3EF632D17F26200B62117 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		74E3EF652D17F2E600B62117 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				74E9327C2D5A141000D61FA5 /* UpdatedTitle.swift */,
 				7437DCA42D123F2800A69028 /* MessageSender.swift */,
 				7466CB102D13717600EBB441 /* NewAccountPayload.swift */,
+				746FD0562EAE7CB100B53B63 /* MessageHistory.swift */,
 				74E3EF602D17CA3600B62117 /* Page.swift */,
 				740649172D1F032900D8A90B /* ConversationEvent.swift */,
 				7495BEB72D474D3100516F8C /* Conversation.swift */,
@@ -293,7 +296,7 @@
 				744369262D23E5CB00ADB644 /* LoadUserSessionUseCase.swift */,
 				7443691E2D23DFD000ADB644 /* LoginUseCase.swift */,
 				744369202D23E05F00ADB644 /* RegisterUseCase.swift */,
-				744369222D23E24400ADB644 /* LoadMessagesListUseCase.swift */,
+				744369222D23E24400ADB644 /* LoadMessageHistoryUseCase.swift */,
 				744369242D23E3C500ADB644 /* SendMessageUseCase.swift */,
 				7443691C2D23DF4700ADB644 /* LogoutUseCase.swift */,
 				743F25C02D23F9FB003479B0 /* StreamConversationEventsUseCase.swift */,
@@ -545,7 +548,7 @@
 				74DA93CE2D0FBB9D00A5F865 /* LoginRequest.swift */,
 				74DA93D02D0FBEC600A5F865 /* RegisterRequest.swift */,
 				74FD27482D16AD32009E41B5 /* SendMessageRequest.swift */,
-				74E3EF5E2D17BD5800B62117 /* MessagesListRequest.swift */,
+				74E3EF5E2D17BD5800B62117 /* MessageHistoryRequest.swift */,
 				740FF15E2D121562007B76F8 /* StreamConversationEventsLiveRequest.swift */,
 				7495BEBB2D474EFB00516F8C /* CreateConversationRequest.swift */,
 				744249322D49E41E00B5DE12 /* ConversationsListRequest.swift */,
@@ -707,7 +710,7 @@
 				74D5FE992D16622300662FD4 /* SignedInResponder.swift in Sources */,
 				74B01B6B2D1D66210087AC28 /* PrimaryButton.swift in Sources */,
 				74D5FE972D16613900662FD4 /* LaunchView.swift in Sources */,
-				74E3EF5F2D17BD5800B62117 /* MessagesListRequest.swift in Sources */,
+				74E3EF5F2D17BD5800B62117 /* MessageHistoryRequest.swift in Sources */,
 				7442492E2D4989CA00B5DE12 /* ConversationsListView.swift in Sources */,
 				744FAED52D0CAE9500F67D49 /* MaterialDesignTextField.swift in Sources */,
 				746F2AEE2D27D7FF00AC07F3 /* Color+Extension.swift in Sources */,
@@ -732,7 +735,7 @@
 				7415C2252D1384D900DC8DEA /* SignedInDependencyContainer.swift in Sources */,
 				7495BEBE2D47513500516F8C /* ConversationViewModel.swift in Sources */,
 				7466CB112D13717600EBB441 /* NewAccountPayload.swift in Sources */,
-				744369232D23E24400ADB644 /* LoadMessagesListUseCase.swift in Sources */,
+				744369232D23E24400ADB644 /* LoadMessageHistoryUseCase.swift in Sources */,
 				74DA93C62D0F534B00A5F865 /* AppDependencyContainer.swift in Sources */,
 				7437DC9F2D12268200A69028 /* RemoteAPIManagerProtocol.swift in Sources */,
 				74DA93C22D0F30B300A5F865 /* HTTPMethod.swift in Sources */,
@@ -759,6 +762,7 @@
 				74ACC3DE2D4B4902001A2197 /* ConversationsListViewModel.swift in Sources */,
 				744369252D23E3C500ADB644 /* SendMessageUseCase.swift in Sources */,
 				74DA93CF2D0FBB9D00A5F865 /* LoginRequest.swift in Sources */,
+				746FD0572EAE7CB100B53B63 /* MessageHistory.swift in Sources */,
 				7466CB042D1367EE00EBB441 /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

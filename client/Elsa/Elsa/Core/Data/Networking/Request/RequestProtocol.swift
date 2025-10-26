@@ -10,13 +10,13 @@ import Foundation
 protocol RequestProtocol {
   var path: String { get }
   var httpMethod: HTTPMethod { get }
-  var queryItems: [String: String] { get }
+  var queryItems: [String: String?] { get }
   var headers: [String: String] { get }
   var addAuthorizationToken: Bool { get }
 }
 
 extension RequestProtocol {
-  var queryItems: [String: String] {
+  var queryItems: [String: String?] {
     [:]
   }
   

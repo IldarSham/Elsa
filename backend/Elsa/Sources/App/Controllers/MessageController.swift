@@ -19,31 +19,40 @@ struct MessageController: RouteCollection, Sendable {
     let guardAuthMiddleware = User.guardMiddleware()
     let tokenAuthGroup = messagesRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
     
-    tokenAuthGroup.on(.GET, use: getAllHandler)
+    tokenAuthGroup.on(.GET, use: getHistory)
     tokenAuthGroup.on(.POST, "send", use: sendHandler)
   }
-  
-  @Sendable
-  func getAllHandler(req: Request) async throws -> Page<MessageDTO> {
-    let user = try req.auth.require(User.self)
 
-    guard let conversationId: Conversation.IDValue = req.query["conversation_id"] else {
-      throw Abort(.badRequest)
-    }
+  @Sendable
+  func getHistory(req: Request) async throws -> MessageHistoryDTO {
+    let user = try req.auth.require(User.self)
+    let query = try req.query.decode(MessageHistoryRequest.self)
     
-    let conversation = try await
-      Conversation.fetch(by: conversationId, userId: user.requireID(), db: req.db)
+    let conversation = try await Conversation.fetch(
+      by: query.conversationId,
+      userId: user.requireID(),
+      db: req.db)
     
-    let messages = try await Message.query(on: req.db)
+    let fetchLimit = query.count + 1
+    
+    var queryBuilder = try Message.query(on: req.db)
       .filter(\.$conversation.$id == conversation.requireID())
       .sort(\.$id, .descending)
       .with(\.$conversation)
-      .paginate(for: req)
+      .limit(fetchLimit)
     
-    return .init(
-      items: try messages.items.reversed().map { try $0.toDTO() },
-      metadata: messages.metadata
-    )
+    if let beforeId = query.beforeMessageId {
+      queryBuilder = queryBuilder.filter(\.$id < beforeId)
+    }
+    
+    let fetchedMessages = try await queryBuilder.all()
+    
+    let hasMore = fetchedMessages.count >= fetchLimit
+    let messages = hasMore ? Array(fetchedMessages.prefix(query.count)) : fetchedMessages
+            
+    return MessageHistoryDTO(
+      messages: try messages.reversed().map { try $0.toDTO() },
+      hasMore: hasMore)
   }
   
   @Sendable

@@ -109,7 +109,9 @@ final class RemoteAPIManager: RemoteAPIManagerProtocol {
   private func buildURL(with data: RequestProtocol) throws -> URL {
     var components = URLComponents(string: baseURL)!
     components.path = "/api" + data.path
-    components.queryItems = data.queryItems.map { URLQueryItem(name: $0, value: $1) }
+    components.queryItems = data.queryItems.compactMap { key, value in
+      value.map { URLQueryItem(name: key, value: $0) }
+    }
     
     if let url = components.url {
       return url
@@ -120,7 +122,7 @@ final class RemoteAPIManager: RemoteAPIManagerProtocol {
 }
 
 enum RemoteAPIManagerError: Error {
-    case invalidURL
-    case missingToken
-    case unauthorized
+  case invalidURL
+  case missingToken
+  case unauthorized
 }

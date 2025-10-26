@@ -8,7 +8,7 @@
 import Foundation
 
 protocol MessagesRemoteAPIProtocol {
-  func getAllMessages(for conversationId: UUID, page: Int, per: Int) async throws -> Page<Message>
+  func getMessageHistory(for conversationId: UUID, count: Int, beforeMessageId: Int?) async throws -> MessageHistory
   func sendMessage(to conversationId: UUID, text: String) async throws -> Message
 }
 
@@ -22,11 +22,11 @@ final class MessagesRemoteAPI: MessagesRemoteAPIProtocol {
     self.apiManager = apiManager
   }
   
-  func getAllMessages(for conversationId: UUID, page: Int, per: Int) async throws -> Page<Message> {
-    let request = MessagesListRequest(
+  func getMessageHistory(for conversationId: UUID, count: Int, beforeMessageId: Int?) async throws -> MessageHistory {
+    let request = MessageHistoryRequest(
       conversationId: conversationId,
-      page: page,
-      per: per
+      count: count,
+      beforeMessageId: beforeMessageId
     )
     return try await apiManager.callAPI(with: request, authToken: userSession.token)
   }

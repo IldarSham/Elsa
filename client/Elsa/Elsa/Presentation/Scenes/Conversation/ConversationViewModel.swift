@@ -12,14 +12,9 @@ final class ConversationViewModel: ObservableObject {
   
   // MARK: - Dependencies
   private let conversationId: UUID
-  private let messagesLoader: LoadMessagesListUseCaseProtocol
+  private let messagesLoader: LoadMessageHistoryUseCaseProtocol
   private let eventsStreamer: StreamConversationEventsUseCaseProtocol
   private let titleUpdateResponder: UpdatedConversationTitleResponder
-  
-  // MARK: - Pagination State
-  private var currentPage = 1
-  private var hasMoreMessages = false
-  private let messagesPerPage = 30
   
   // MARK: - Published Properties
   @Published private(set) var messages: [Message] = []
@@ -29,10 +24,13 @@ final class ConversationViewModel: ObservableObject {
       didSet { isDisplayingError = true }
   }
   @Published var isDisplayingError = false
+  
+  // MARK: - Private Properties
+  private var hasMoreMessages = false
 
   // MARK: - Initialization
   init(conversationId: UUID,
-       messagesLoader: LoadMessagesListUseCaseProtocol,
+       messagesLoader: LoadMessageHistoryUseCaseProtocol,
        eventsStreamer: StreamConversationEventsUseCaseProtocol,
        titleUpdateResponder: UpdatedConversationTitleResponder) {
     self.conversationId = conversationId
@@ -58,12 +56,12 @@ final class ConversationViewModel: ObservableObject {
     guard !isLoading else { return }
     isLoading = true
     defer { isLoading = false }
-    
+
     do {
       let response = try await messagesLoader.load(
         for: conversationId,
-        page: currentPage,
-        per: messagesPerPage
+        count: 30,
+        beforeMessageId: messages.first?.id
       )
       process(response)
     } catch {
@@ -77,8 +75,7 @@ final class ConversationViewModel: ObservableObject {
     Task {
       isLoadingMore = true
       defer { isLoadingMore = false }
-      
-      currentPage += 1
+
       try await Task.sleep(for: .seconds(1))
       await loadMessages()
     }
@@ -110,9 +107,9 @@ final class ConversationViewModel: ObservableObject {
     titleUpdateResponder.updatedConversationTitle(updatedTitle)
   }
 
-  private func process(_ response: Page<Message>) {
-    messages.insert(contentsOf: response.items, at: 0)
-    hasMoreMessages = messages.count < response.metadata.total
+  private func process(_ response: MessageHistory) {
+    messages.insert(contentsOf: response.messages, at: 0)
+    hasMoreMessages = response.hasMore
   }
   
   private func handleError(_ error: Error) {

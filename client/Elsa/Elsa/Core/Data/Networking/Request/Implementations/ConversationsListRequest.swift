@@ -22,7 +22,7 @@ extension ConversationsListRequest: RequestProtocol {
     .get
   }
   
-  var queryItems: [String: String] {
+  var queryItems: [String: String?] {
     [
       "page": "\(page)",
       "per": "\(per)"

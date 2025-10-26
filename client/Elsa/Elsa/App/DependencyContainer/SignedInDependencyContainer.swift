@@ -138,7 +138,7 @@ extension SignedInDependencyContainer: ConversationViewFactory {
                                  titleUpdateResponder: sharedConversationsListViewModel)
   }
 
-  public func makeLoadMessagesListUseCase() -> LoadMessagesListUseCaseProtocol {
+  public func makeLoadMessagesListUseCase() -> LoadMessageHistoryUseCaseProtocol {
     return LoadMessagesListUseCase(remoteAPI: sharedMessagesRemoteAPI)
   }
   
